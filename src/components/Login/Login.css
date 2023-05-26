@@ -1,0 +1,235 @@
+.grid_img {
+    background: url(../../images/bgwebmovie.jpg) no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    filter: blur(10px);
+}
+
+.container_img {
+    width: 70%;
+    position: absolute;
+    background: url(../../images/bgwebmovie.jpg) no-repeat;
+    background-position: center;
+    background-size: cover;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 700px;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+}
+
+.container-left-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 60%;
+    height: 50%;
+}
+
+.text-title {
+    font-weight: 200;
+    font-size: 40px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.text-desc {
+    margin-top: 100px;
+    text-align: justify;
+    font-size: 18px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.container-right {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.right-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+}
+
+.container-signin {
+    position: absolute;
+    width: 50%;
+    height: 60%;
+}
+
+.text-center {
+    text-align: center;
+    color: #fff;
+    font-size: 40px;
+    font-weight: 200;
+    margin-bottom: 60px;
+}
+
+.container-input {
+    position: relative;
+    width: 100%;
+    height: 70px;
+}
+
+.text-label {
+    position: absolute;
+    color: #fff;
+    top: -22px;
+    left: 0;
+}
+
+.container-input + .container-input {
+    margin: 15px 0 10px;
+}
+
+.text-input {
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    color: #000;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+.text-error {
+    margin-top: 4px;
+    color: yellow;
+}
+
+.link-to-signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.link-to-signup p {
+    color: #fff;
+    margin-right: 5px;
+}
+
+.link-signup {
+    color: greenyellow;
+    font-size: 18px;
+}
+
+.btn-signin {
+    cursor: pointer;
+    display: block;
+    margin: 25px auto 0;
+    width: 35%;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+}
+
+.btn-signin:hover {
+    background-color: #ccc;
+}
+
+.text-to-signup {
+    text-align: center;
+    color: #fff;
+}
+
+/* alert */
+.alert {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 100px;
+    background-image: url("../../images/bgwebmovie.jpg");
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn ease 3s;
+    transition: 3s;
+    border: 1px solid #ffddf6;
+    border-left: none;
+    border-radius: 8px;
+    box-shadow: 16px 16px 30px rgb(205, 44, 44);
+}
+
+.alert_icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.alert_success::before {
+    content: "";
+    background-color: #85ffbd;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+}
+
+.alert_danger::before {
+    content: "";
+    background-color: red;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+}
+
+.iconSuccess {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    color: #85ffbd;
+}
+
+.iconDanger {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    color: red;
+}
+
+.alert_message {
+    font-size: 1.1rem;
+    color: #ffddf6;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
