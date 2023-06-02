@@ -6,6 +6,7 @@ import Home from "./components/Home/Home";
 import BookDetail from "./components/BookDetail/BookDetail";
 import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
+import ManagerBook from "./components/ManagerBook/ManagerBook";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                     <Route path="Home" element={<Home />}></Route>
                     <Route path="Profile" element={<Profile />}></Route>
                     <Route path="Cart" element={<Cart />}></Route>
+                    <Route path="ManagerBook" element={<ManagerBook />}></Route>
                     <Route path="Book/:id" element={<BookDetail />}></Route>
                 </Routes>
             </Router>

@@ -34,6 +34,21 @@ function Header() {
                     </Link>
                 </div>
                 <div className="headingUser">
+                    {localStorage.getItem("role") === "ROLE_ADMIN" ? (
+                        <div className="managerBook">
+                            <Link
+                                to="/ManagerBook"
+                                style={{
+                                    textDecoration: "none",
+                                    color: "#000",
+                                }}
+                            >
+                                <p className="manager__book">Quản lí sách</p>
+                            </Link>
+                        </div>
+                    ) : (
+                        ""
+                    )}
                     <div className="iconCart">
                         <AiOutlineShoppingCart className="iconShopping" />
                         <Link

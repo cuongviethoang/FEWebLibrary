@@ -24,6 +24,7 @@ function BookDetail() {
     const [currentComment, setCurrentComment] = useState([]);
     const [currentTym, setCurrentTym] = useState([]);
     const [currentReact, setCurrentReact] = useState([]);
+    const [averageReact, setAverageReact] = useState({});
     const [valueInput1, setValueInput1] = useState(0);
     const [rating, setRating] = useState(0);
     const [hoveredStars, setHoveredStars] = useState(0);
@@ -38,6 +39,7 @@ function BookDetail() {
         getComment();
         getTym();
         getReact();
+        getCountReact();
     }, []);
 
     const getBookDetail = () => {
@@ -95,6 +97,21 @@ function BookDetail() {
             })
             .then((res) => {
                 setCurrentReact(res.data);
+                return res.data;
+            })
+            .catch((error) => console.log("error: ", error));
+    };
+
+    const getCountReact = () => {
+        axios
+            .get(`http://localhost:8082/api/book/${id}/count`, {
+                headers: {
+                    Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                },
+            })
+            .then((res) => {
+                setAverageReact(res.data);
                 return res.data;
             })
             .catch((error) => console.log("error: ", error));
@@ -251,6 +268,7 @@ function BookDetail() {
             )
             .then((res) => {
                 getReact();
+                getCountReact();
                 return res.data;
             })
             .catch((error) => console.log("error: ", error));
@@ -267,6 +285,7 @@ function BookDetail() {
             .then((res) => {
                 alert("Xóa đánh giá thành công");
                 getReact();
+                getCountReact();
                 return res.data;
             })
             .catch((error) => {
@@ -369,8 +388,24 @@ function BookDetail() {
                                     </span>
                                 </div>
                                 <div className="row fix__height">
+                                    <div className="genre__book">
+                                        {bookDetail.genres
+                                            ? bookDetail.genres.map(
+                                                  (genre, index) => (
+                                                      <div
+                                                          className="genre"
+                                                          key={index}
+                                                      >
+                                                          {genre.name}
+                                                      </div>
+                                                  )
+                                              )
+                                            : ""}
+                                    </div>
+                                </div>
+                                <div className="row fix__height">
                                     <span className="num__react">
-                                        <p>5.0</p>
+                                        <p>{averageReact.averageRate}</p>
                                         <AiFillStar className="iconStar" />
                                     </span>
                                     <span className="num__comment">

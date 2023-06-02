@@ -48,11 +48,11 @@
     display: flex;
     align-items: center;
     width: 100%;
-    height: 60px;
+    height: 80px;
 }
 
 .fix__height + .fix__height {
-    margin-bottom: 40px;
+    margin-top: 10px;
 }
 
 .detail__book {
@@ -73,6 +73,20 @@
 .release__date {
     margin: 10px 0 0 0;
     font-size: 20px;
+}
+
+.genre__book {
+    display: flex;
+}
+
+.genre {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+}
+
+.genre + .genre {
+    margin-left: 5px;
 }
 
 .num__react {
@@ -563,7 +577,7 @@
 /* Alert mua sách */
 
 .alert__message {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     left: 0;

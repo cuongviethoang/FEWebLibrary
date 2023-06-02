@@ -12,6 +12,8 @@ function Profile() {
     const [files, setFiles] = useState(null);
     const [imageSrc, setImageSrc] = useState("");
     const [currentBill, setCurrentBill] = useState([]);
+    const [billDetail, setBillDetail] = useState({});
+    const [checkDeleteBill, setCheckDeleteBill] = useState(false);
 
     const navigate = useNavigate();
 
@@ -106,6 +108,45 @@ function Profile() {
         navigate(`/Book/${index}`);
     };
 
+    // xóa bill
+    const handleDeleteBill = (bill) => {
+        setBillDetail(bill);
+        setCheckDeleteBill(true);
+    };
+
+    const handleConfirmDelBill = () => {
+        axios
+            .put(
+                `http://localhost:8082/api/book/${billDetail.idBook}/delbill`,
+                {
+                    usedBuy: billDetail.usedBuy,
+                },
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + localStorage.getItem("accessToken"),
+                    },
+                }
+            )
+            .then((res) => res.data)
+            .catch((error) => console.log(error));
+
+        axios
+            .delete(`http://localhost:8082/api/bill/${billDetail.id}`, {
+                headers: {
+                    Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                },
+            })
+            .then((res) => {
+                alert("Xóa bill thành công");
+                getBill();
+                setCheckDeleteBill(false);
+                return res.data;
+            })
+            .catch((error) => alert("Xóa bill thất bại"));
+    };
+
     return (
         <>
             <Header />
@@ -161,7 +202,7 @@ function Profile() {
                                         src={
                                             localStorage.getItem(
                                                 "profilePic"
-                                            ) != ""
+                                            ) != null
                                                 ? "http://localhost:8082/api/file/getImg?path=" +
                                                   localStorage.getItem(
                                                       "profilePic"
@@ -191,6 +232,11 @@ function Profile() {
                         <h1 className="bill">Hóa đơn</h1>
                         {currentBill.map((bill, index) => (
                             <div className="row container__bill" key={index}>
+                                <AiFillCloseCircle
+                                    className="icon__delete__bill"
+                                    onClick={() => handleDeleteBill(bill)}
+                                    style={{ cursor: "pointer" }}
+                                />
                                 <div className="frame__bill">
                                     <div className="img__bill">
                                         <img
@@ -243,6 +289,30 @@ function Profile() {
                     </div>
                 </div>
             </div>
+            {checkDeleteBill ? (
+                <div className="containerDeleteBill">
+                    <div className="overlay__delete__bill"></div>
+                    <div className="delete__bill">
+                        <h1>Bạn có chắc chắn muốn xóa bill này không?</h1>
+                        <div className="confirm__btn">
+                            <button
+                                className="confirmDelBill"
+                                onClick={handleConfirmDelBill}
+                            >
+                                Xác nhận
+                            </button>
+                            <button
+                                className="confirmNoBill"
+                                onClick={() => setCheckDeleteBill(false)}
+                            >
+                                Không
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                ""
+            )}
         </>
     );
 }

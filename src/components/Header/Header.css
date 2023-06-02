@@ -30,13 +30,20 @@
     display: inline-block;
     font-size: 32px;
     float: right;
-    margin: auto;
+    line-height: 80px;
+    margin: 0;
 }
 
 .headingUser {
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
     width: 100%;
     height: 100%;
+}
+
+.managerBook {
+    margin-right: 15px;
 }
 
 .iconShopping {
@@ -45,11 +52,35 @@
     color: orange;
 }
 
+.manager__book,
+.stat,
+.iconCart,
+.iconUser,
+.stat__book,
+.numCart,
+.username {
+    line-height: 80px;
+}
+
+.manager__book,
+.stat__book,
+.numCart,
+.username {
+    margin: 0;
+}
+
+.manager__book,
+.stat__book {
+    font-size: 20px;
+}
+
+.stat__book {
+    margin: 0 20px 0 20px;
+}
+
 .iconCart {
-    width: 80%;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     cursor: pointer;
 }
 
