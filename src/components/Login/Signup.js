@@ -16,6 +16,7 @@ function Signup() {
     const [errEmail, setErrorEmail] = useState("");
     const [errPass, setErrPass] = useState("");
 
+    // ấn vào input rồi blur ra ngoài khi chưa ghi gì
     const handleBlur = (e) => {
         const name = e.target.name;
         const value = e.target.value;
@@ -50,6 +51,7 @@ function Signup() {
         }
     };
 
+    // click ghi lại vào thẻ input
     const handleClick = (e) => {
         const name = e.target.name;
         if (name === "username") {
@@ -70,6 +72,21 @@ function Signup() {
             if (errUsername.trim() !== "") setErrorMess(errUsername);
             else if (errEmail.trim() !== "") setErrorMess(errEmail);
             else setErrorMess(errPass);
+            setTimeout(() => {
+                setErrorMess("");
+            }, 3000);
+        } else if (username.trim() === "") {
+            setErrorMess("Vui lòng điền tên đăng kí");
+            setTimeout(() => {
+                setErrorMess("");
+            }, 3000);
+        } else if (email.trim() === "") {
+            setErrorMess("Vui lòng điền email");
+            setTimeout(() => {
+                setErrorMess("");
+            }, 3000);
+        } else if (password.trim() === "") {
+            setErrorMess("Vui lòng điền mật khẩu");
             setTimeout(() => {
                 setErrorMess("");
             }, 3000);

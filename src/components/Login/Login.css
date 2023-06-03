@@ -42,8 +42,9 @@
 }
 
 .text-title {
-    width: 400px;
-    animation: typing 5s steps(40), blink 0.5s step-end infinite alternate;
+    width: 300px;
+    animation: typing 3s steps(20) infinite,
+        blink 0.5s step-end infinite alternate;
     white-space: nowrap;
     overflow: hidden;
     border-right: 3px solid;
@@ -62,8 +63,6 @@
     border-right: 3px solid;
     font-size: 18px;
     letter-spacing: 1px;
-    animation: typing 5s steps(40) infinite,
-        blink 0.5s step-end infinite alternate;
     font-family: monospace;
     color: rgb(14, 247, 255);
 }
@@ -189,12 +188,12 @@
     transform: translate(-50%, -50%);
     width: 400px;
     height: 100px;
-    background-image: url("../../images/bgwebmovie.jpg");
+    background-image: url("../../images/backgroundLogin.jpg");
     object-fit: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fadeIn ease 3s;
+    animation: fadeInn ease-in-out 3s;
     transition: 3s;
     border: 1px solid #ffddf6;
     border-left: none;
@@ -245,11 +244,11 @@
 }
 
 .alert_message {
-    font-size: 1.1rem;
-    color: #ffddf6;
+    font-size: 20px;
+    color: yellow;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInn {
     from {
         opacity: 0;
     }

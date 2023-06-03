@@ -43,12 +43,13 @@
 }
 
 .managerBook {
-    margin-right: 15px;
+    margin-right: 30px;
 }
 
-.iconShopping {
+.iconShopping,
+.iconManager {
     font-size: 35px;
-
+    margin-right: 5px;
     color: orange;
 }
 
@@ -78,7 +79,8 @@
     margin: 0 20px 0 20px;
 }
 
-.iconCart {
+.iconCart,
+.managerBook {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -123,9 +125,11 @@
 }
 
 .listItem {
-    width: 100px;
+    width: 120px;
+    height: 40px;
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 0;
     list-style: none;
 }

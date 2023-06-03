@@ -1,0 +1,118 @@
+.footer {
+    width: 100%;
+    background-color: #f5f5f5;
+}
+
+.containerFooter {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container__footer {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+}
+
+.frame__footer__left {
+    position: relative;
+    padding: 20px;
+}
+
+.frame__footer__left::after {
+    position: absolute;
+    content: "";
+    width: 1px;
+    height: 80%;
+    background-color: #ccc;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+}
+
+.title__footer {
+    color: #c92127;
+    width: 90%;
+    font-size: 54px;
+    font-weight: 800;
+    margin: 20px 0 0 0;
+}
+
+.desc__footer__left {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.img__bct {
+    margin-top: 20px;
+    width: 150px;
+}
+
+.image__bct {
+    width: 100%;
+    height: auto;
+}
+
+.social__footer__media {
+    margin-top: 20px;
+}
+
+.social__face,
+.social__insta,
+.social__youtube,
+.social__twice,
+.social__pinterest {
+    width: 40px;
+    font-size: 40px;
+    color: #847f7f;
+    margin-right: 20px;
+}
+
+.social__download {
+    margin-top: 20px;
+    display: flex;
+}
+
+.img__ggplay,
+.img__appstore {
+    width: 140px;
+    border-radius: 8px;
+    margin-right: 16px;
+}
+
+.footer__right {
+    padding: 30px 50px 0 50px;
+}
+
+.list__service,
+.list__help,
+.list__myUser {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list__service li,
+.list__help li,
+.list__myUser li {
+    font-size: 16px;
+    margin: 24px 0 24px 0;
+}
+.footer__right__bottom {
+    margin-top: 20px;
+}
+
+.list__call {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.img__call {
+    width: 170px;
+    margin: 20px 0 20px 0;
+}
+
+.image__call {
+    width: 120px;
+}

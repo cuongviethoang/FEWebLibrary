@@ -6,6 +6,7 @@ import { AiFillCamera, AiFillCloseCircle } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Footer from "../Footer/Footer";
 
 function Profile() {
     const [checkCamera, setCheckCamera] = useState(false);
@@ -202,12 +203,12 @@ function Profile() {
                                         src={
                                             localStorage.getItem(
                                                 "profilePic"
-                                            ) != null
-                                                ? "http://localhost:8082/api/file/getImg?path=" +
+                                            ) === null
+                                                ? "https://tse3.mm.bing.net/th?id=OIP.CiC4AzdlWzYcj2j65RM33AAAAA&pid=Api&P=0"
+                                                : "http://localhost:8082/api/file/getImg?path=" +
                                                   localStorage.getItem(
                                                       "profilePic"
                                                   )
-                                                : "https://tse3.mm.bing.net/th?id=OIP.CiC4AzdlWzYcj2j65RM33AAAAA&pid=Api&P=0"
                                         }
                                         alt=""
                                     />
@@ -313,6 +314,7 @@ function Profile() {
             ) : (
                 ""
             )}
+            <Footer />
         </>
     );
 }

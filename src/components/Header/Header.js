@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../GridSystem/Grid.css";
 import "./Header.css";
 import { AiOutlineShoppingCart, AiFillCaretDown } from "react-icons/ai";
+import { MdManageAccounts } from "react-icons/md";
+import { IoStatsChart } from "react-icons/io5";
 import { useNavigate, Link } from "react-router-dom";
 
 function Header() {
@@ -36,6 +38,7 @@ function Header() {
                 <div className="headingUser">
                     {localStorage.getItem("role") === "ROLE_ADMIN" ? (
                         <div className="managerBook">
+                            <MdManageAccounts className="iconManager" />
                             <Link
                                 to="/ManagerBook"
                                 style={{
@@ -44,6 +47,22 @@ function Header() {
                                 }}
                             >
                                 <p className="manager__book">Quản lí sách</p>
+                            </Link>
+                        </div>
+                    ) : (
+                        ""
+                    )}
+                    {localStorage.getItem("role") === "ROLE_ADMIN" ? (
+                        <div className="managerBook">
+                            <IoStatsChart className="iconManager" />
+                            <Link
+                                to="/Stat"
+                                style={{
+                                    textDecoration: "none",
+                                    color: "#000",
+                                }}
+                            >
+                                <p className="manager__book">Thống kê</p>
                             </Link>
                         </div>
                     ) : (

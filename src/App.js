@@ -7,6 +7,8 @@ import BookDetail from "./components/BookDetail/BookDetail";
 import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
 import ManagerBook from "./components/ManagerBook/ManagerBook";
+import Stat from "./components/Stat/Stat";
+import BillDetail from "./components/BillDetail/BillDetail";
 
 function App() {
     return (
@@ -21,6 +23,11 @@ function App() {
                     <Route path="Cart" element={<Cart />}></Route>
                     <Route path="ManagerBook" element={<ManagerBook />}></Route>
                     <Route path="Book/:id" element={<BookDetail />}></Route>
+                    <Route path="Stat" element={<Stat />}></Route>
+                    <Route
+                        path="BillDetail/Book/:id"
+                        element={<BillDetail />}
+                    ></Route>
                 </Routes>
             </Router>
         </div>

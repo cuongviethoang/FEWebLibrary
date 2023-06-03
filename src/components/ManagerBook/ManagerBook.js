@@ -70,6 +70,13 @@ function ManagerBook() {
     // Thêm sách
     const handleCheckAddBook = () => {
         setCheckAdd(true);
+        setInputTitle("");
+        setInputAuhtor("");
+        setInputRelease("");
+        setInputLength(0);
+        setInputTotalBook(0);
+        setInputPrice(0);
+        setInputFileName("");
     };
 
     function handleUpLoad(e) {
