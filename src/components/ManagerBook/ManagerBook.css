@@ -1,6 +1,6 @@
 .container__manager {
     width: 100%;
-    padding-top: 100px;
+    padding: 50px 0;
     background-color: #f5f5f5;
     display: flex;
     justify-content: center;
@@ -51,59 +51,47 @@
     font-size: 16px;
 }
 
-.cards:hover .overlay__select {
-    display: flex;
+.list__table__book {
+    width: 100%;
 }
 
-.overlay__select {
-    position: absolute;
-    width: 80%;
-    height: 100%;
-    background-color: #000;
-    opacity: 0.7;
-    /* display: flex; */
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: 0.8s;
-    animation: fadeIn 0.8s ease-in-out;
+.genre__name {
+    padding: 5px;
+    background-color: #ccc;
+    border-radius: 4px;
+    margin: 5px;
 }
 
-.select__edit,
-.select__genre,
-.select__image {
-    width: 120px;
-    height: 50px;
-    color: #fff;
+.btn__view {
+    cursor: pointer;
+    padding: 5px 15px;
+    outline: none;
+    background-color: rgb(0, 221, 255);
     font-size: 16px;
-    border-radius: 16px;
-    border: 1px solid #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-right: 5px;
 }
 
-.select__edit,
-.select__genre {
-    margin-bottom: 20px;
+.btn__edit {
+    cursor: pointer;
+    padding: 5px 15px;
+    outline: none;
+    background-color: yellow;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-right: 5px;
 }
 
-.select__edit:hover,
-.select__genre:hover,
-.select__image:hover {
-    background-color: #d0011b;
-    border: 1px solid #fbebed;
-    font-size: 20px;
-}
-
-@keyframes fadeIn {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(0%);
-    }
+.btn__del {
+    cursor: pointer;
+    padding: 5px 15px;
+    outline: none;
+    background-color: red;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
 }
 
 /* Add book */
@@ -140,114 +128,123 @@
 }
 
 .info__book {
-    width: 50%;
+    width: 40%;
     height: 100%;
     padding: 20px;
 }
 
-.value__input label {
-    display: inline-block;
-    width: 30%;
-    font-size: 16px;
+.title__author {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.value__input + .value__input {
-    margin-top: 10px;
+.title__input,
+.author__input {
+    position: relative;
+    width: 40%;
 }
 
-.value__input input {
-    color: #000;
-    font-size: 16px;
-    width: 70%;
+.title__input label,
+.author__input label,
+.overview__book label {
+    position: absolute;
+    left: 0;
+    top: -24px;
+}
+
+.title__input input,
+.author__input input {
+    width: 100%;
+    height: 25px;
     outline: none;
 }
 
+.overview__book {
+    width: 100%;
+    position: relative;
+    margin-top: 40px;
+}
+
+.overview__book textarea {
+    width: 100%;
+    height: 150px;
+    outline: none;
+    font-size: 16px;
+    white-space: pre-wrap;
+}
+
+.date__length {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.genres__book {
+    margin-top: 40px;
+    width: 100%;
+    position: relative;
+}
+
+.genres__book label {
+    position: absolute;
+    left: 0;
+    top: -24px;
+}
+
+.genres__book input {
+    width: 100%;
+    height: 25px;
+}
+
+.price__total {
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .img__book {
-    width: 50%;
+    width: 60%;
     height: 100%;
 }
 
-.select__manager button {
-    width: 70px;
-    height: 30px;
+.upload__btn {
+    padding: 10px 30px;
+    border: none;
+    outline: 3px solid #000;
+    border-radius: 8px;
 }
 
 .select__manager button {
+    cursor: pointer;
+    cursor: pointer;
+    padding: 15px 50px;
     margin-right: 15px;
+    border: none;
+    outline: 3px solid red;
+    border-radius: 8px;
+    font-size: 16px;
 }
+
+/* .select__manager button {
+    margin-right: 15px;
+} */
 
 /* alert confirm add */
 .confirm__manager {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 300px;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    box-shadow: 8px 8px 20px #000;
-}
-
-.confirm__manager h1 {
-    text-align: center;
-}
-
-.confirm__btn button {
-    width: 100px;
-    height: 25px;
-    margin-right: 5px;
-}
-
-/* delete book */
-.delete__book {
-    position: absolute;
-    right: 0;
-    top: 0;
-    font-size: 20px;
-}
-
-.containerDelete {
     position: fixed;
-    right: 0;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background-color: #ccc;
-    z-index: 999;
-}
-
-.container__delete {
+    width: 100%;
+    height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.set__up__size__img {
-    width: 464px;
-    height: 658px;
-    object-fit: cover;
-}
-
-/* Add genre */
-.containerAddGenre {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99;
-}
-
-.overlay__add_genre {
+.overlay__confirm {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -255,227 +252,77 @@
     opacity: 0.8;
 }
 
-.container__add__genre {
-    position: relative;
-    width: 500px;
-    height: 200px;
-    background-color: #f5f5f5;
-    z-index: 120;
-    border-radius: 8px;
-}
-
-.close__add_genre {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-}
-
-.container__add__genre h1 {
-    text-align: center;
-}
-
-.input__add_genre {
-    padding: 10px;
-    width: 100%;
-}
-
-.input__add_genre label {
-    display: inline-block;
-    font-size: 20px;
-    width: 30%;
-    text-align: center;
-}
-
-.input__add_genre input {
-    width: 70%;
-    outline: none;
-    height: 30px;
-}
-
-.container__add__genre button {
-    display: block;
-    margin: auto;
-    width: 100px;
-    height: 30px;
-}
-
-/* edit book */
-.container__edit_book {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-color: #ccc;
-    z-index: 999;
-}
-
-.close__edit_book {
-    position: absolute;
-    top: 5%;
-    left: 95%;
-    color: red;
-    font-size: 30px;
-}
-
-.editBook {
-    text-align: center;
-}
-
-.container__info_book {
-    display: flex;
-    width: 1400px;
-    height: 650px;
-}
-
-.info__edit__book {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-}
-
-.value__input label {
-    display: inline-block;
-    width: 10%;
-    font-size: 16px;
-}
-
-.value__input + .value__input {
-    margin-top: 10px;
-}
-
-.value__input input {
-    color: #000;
-    font-size: 16px;
-    width: 90%;
-    outline: none;
-}
-
-.select__manager button {
-    width: 70px;
-    height: 30px;
-}
-
-.select__manager button {
-    margin-right: 15px;
-}
-
-/* alert confirm add */
-.confirm__manager {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+.frame__confirm {
     width: 600px;
-    height: 300px;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    box-shadow: 8px 8px 20px #000;
+    height: 200px;
+    z-index: 10;
+    background-color: #ccc;
+    border-radius: 12px;
 }
 
-.confirm__manager h1 {
+.frame__confirm h1 {
     text-align: center;
+}
+
+.confirm__btn {
+    display: flex;
+    justify-content: center;
 }
 
 .confirm__btn button {
+    cursor: pointer;
     width: 100px;
-    height: 25px;
+    height: 30px;
     margin-right: 5px;
+    border-radius: 6px;
+    outline: none;
 }
+
+/* Xóa sách */
+.container__del__book {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay__del__book {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.8;
+}
+
+/* Edit book */
 
 .muted {
     opacity: 0.5; /* Đặt độ mờ tùy ý */
     pointer-events: none; /* Ngăn không cho người dùng tương tác */
 }
 
-/* Edit img */
-.containerEditImg {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
-
-.overlay__edit__img {
-    position: absolute;
+.id__book {
     width: 100%;
-    height: 100%;
-    background-color: #000;
-    opacity: 0.7;
-}
-
-.container__edit__img {
     position: relative;
-    width: 1200px;
-    height: 800px;
-    background-color: #f5f5f5;
-    z-index: 1;
 }
 
-.container__edit__img h1 {
-    text-align: center;
+.id__book label {
+    position: absolute;
+    left: 0;
+    top: -24px;
 }
 
-.edit__img {
-    display: flex;
-    padding: 20px;
+.totalbook__input {
+    margin-top: 40px;
+    position: relative;
 }
 
-.edit__img__book {
-    width: 40%;
-}
-
-.container__img__old,
-.container__img__new {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.btn__img__old,
-.btn__img__new {
-    width: 100%;
-    height: 40px;
-    border-radius: 8px;
-    outline: none;
-    margin-bottom: 20px;
-}
-
-.set__up__size__img__edit {
-    width: 348px;
-    height: 493.5px;
-    border-radius: 8px;
-}
-
-.icon__arrow__right {
-    width: 20%;
-    font-size: 50px;
-    height: 100%;
-    margin: auto;
-}
-
-.btn__cofirm__edit {
-    display: block;
-    margin: auto;
-    width: 140px;
-    height: 50px;
-    border-radius: 8px;
-    outline: none;
-    border: 1px solid #d0011b;
-    font-size: 16px;
+.totalbook__input label {
+    position: absolute;
+    left: 0;
+    top: -24px;
 }

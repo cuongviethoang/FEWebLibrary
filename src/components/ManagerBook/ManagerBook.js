@@ -2,16 +2,17 @@ import React from "react";
 import "./ManagerBook.css";
 import "../GridSystem/Grid.css";
 import Header from "../Header/Header";
-import Card from "../Card/Card";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { AiFillCloseCircle } from "react-icons/ai";
-import { RxArrowRight } from "react-icons/rx";
+import Select from "react-select";
+import moment from "moment";
+import { Link } from "react-router-dom";
 
 function ManagerBook() {
     const [valueSearch, setValueSearch] = useState("");
     const [listBook, setListBook] = useState([]);
-    const [detailBook, setDetailBook] = useState({});
+    const [listGenres, setListGenres] = useState([]);
     const [checkAdd, setCheckAdd] = useState(false);
     const [checkEdit, setCheckEdit] = useState(false);
     const [checkConfirmEdit, setCheckConfirmEdit] = useState(false);
@@ -20,15 +21,16 @@ function ManagerBook() {
     const [confirmAdd, setConfirmAdd] = useState(false);
     const [confirmEdit, setConfirmEdit] = useState(false);
     const [checkDelete, setCheckDelete] = useState(false);
-    const [checkAddGenre, setCheckAddGenre] = useState(false);
-    const [checkEditImg, setCheckEditImg] = useState(false);
+
     const [idBook, setIdBook] = useState(0);
-    const [inputGenre, setInputGenre] = useState("");
 
     const [inputTitle, setInputTitle] = useState("");
     const [inputAuthor, setInputAuhtor] = useState("");
+    const [inputOverview, setInputOverview] = useState("");
     const [inputRelease, setInputRelease] = useState("");
+    const [inputDate, setInputDate] = useState("");
     const [inputLength, setInputLength] = useState("");
+    const [selectGenre, setSelectGenre] = useState([]);
     const [inputSold, setInputSold] = useState(0);
     const [inputTotalBook, setInputTotalBook] = useState(0);
     const [inputPrice, setInputPrice] = useState(0);
@@ -36,6 +38,7 @@ function ManagerBook() {
 
     useEffect(() => {
         getAllBook();
+        getAllGenre();
     }, []);
 
     // Gọi api lấy hết sách
@@ -52,6 +55,22 @@ function ManagerBook() {
                 return res.data;
             })
             .catch((error) => console.log("error: ", error));
+    };
+
+    // Gọi tất cả thể loại
+    const getAllGenre = () => {
+        axios
+            .get("http://localhost:8082/api/genres", {
+                headers: {
+                    Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                },
+            })
+            .then((res) => {
+                setListGenres(res.data);
+                return res.data;
+            })
+            .catch((error) => console.log(error));
     };
 
     // Tìm sách trong input
@@ -77,6 +96,25 @@ function ManagerBook() {
         setInputTotalBook(0);
         setInputPrice(0);
         setInputFileName("");
+        setInputOverview("");
+        setInputDate("");
+        setImageSrc("");
+    };
+
+    const handleCloseAddBook = () => {
+        setCheckAdd(false);
+    };
+
+    const handleChangeDate = (e) => {
+        const selectedDate = e.target.value;
+        setInputDate(selectedDate);
+        const formattedDate = moment(selectedDate).format("DD/MM/YYYY");
+        setInputRelease(formattedDate);
+    };
+
+    const handleChangeGenre = (e) => {
+        let arr = Array.isArray(e) ? e.map((x) => x.value) : [];
+        setSelectGenre(arr);
     };
 
     function handleUpLoad(e) {
@@ -87,7 +125,6 @@ function ManagerBook() {
         formData.append("files", file); // thêm file vào đối tượng FormData với tên files. Tên này được sử dụng để
         // nhận biết file trong phía server khi gửi dữ liệu đi
         setFiles(formData); //  Dòng này sử dụng hàm setFiles để gán giá trị của formData cho biến files. Điều này giúp lưu trữ dữ liệu file để sử dụng trong các bước tiếp theo hoặc gửi đi.
-        console.log(file.name);
         setInputFileName(file.name);
 
         const reader = new FileReader(); //  Dòng này tạo một đối tượng FileReader, được sử dụng để đọc dữ liệu từ file.
@@ -116,7 +153,7 @@ function ManagerBook() {
         }
     };
 
-    const confirmYes = () => {
+    const confirmYesAddBook = () => {
         axios
             .post("http://localhost:8082/api/file/upload", files, {
                 headers: {
@@ -136,10 +173,12 @@ function ManagerBook() {
                     title: inputTitle,
                     author: inputAuthor,
                     releaseDate: inputRelease,
+                    overview: inputOverview,
                     length: inputLength,
                     imgBook: inputFileName,
                     totalBook: inputTotalBook,
                     price: inputPrice,
+                    genres: selectGenre,
                 },
                 {
                     headers: {
@@ -151,86 +190,112 @@ function ManagerBook() {
             .then((res) => {
                 alert("Thêm sách thành công");
                 setConfirmAdd(false);
+                setCheckAdd(false);
                 getAllBook();
                 return res.data;
             })
-            .catch((error) => alert("Thêm sách thất bại"));
+            .catch((error) => {
+                const resMess =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.toString() ||
+                    error.message();
+                alert(resMess);
+            });
     };
 
-    const confirmNo = () => {
+    const confirmNoAddBook = () => {
         setConfirmAdd(false);
     };
 
-    // Delete book
-    const handleDeleteBook = (book) => {
+    // Xóa sách
+    const handleCheckDelBook = (book) => {
         setCheckDelete(true);
-        setDetailBook(book);
+        setIdBook(book.id);
     };
 
-    const confirmYesDelete = () => {
+    const confirmYesDelBook = () => {
         axios
-            .delete(`http://localhost:8082/api/book/${detailBook.id}`, {
+            .delete(`http://localhost:8082/api/book/${idBook}`, {
                 headers: {
                     Authorization:
                         "Bearer " + localStorage.getItem("accessToken"),
                 },
             })
             .then((res) => {
-                alert("Xóa sách thành công");
-                getAllBook();
+                setIdBook(0);
                 setCheckDelete(false);
+                getAllBook();
+                alert("Xóa sách thành công");
                 return res.data;
             })
-            .catch((error) => alert("Xóa sách thất bại"));
+            .catch((error) => console.log(error));
     };
 
-    // Add genre
-    const handleAlertGenre = (id) => {
-        setCheckAddGenre(true);
-        setIdBook(id);
+    const confirmNoDelBook = () => {
+        setIdBook(0);
+        setCheckDelete(false);
     };
 
-    const handleConfirmAddGenre = () => {
-        axios
-            .post(
-                `http://localhost:8082/api/book/${idBook}/genre`,
-                {
-                    name: inputGenre,
-                },
-                {
+    // Sửa sách
+    const handleCheckEditBook = (book) => {
+        setCheckEdit(true);
+        setIdBook(book.id);
+        setInputTitle(book.title);
+        setInputAuhtor(book.author);
+        setInputRelease(book.releaseDate);
+        setInputLength(book.length);
+        setInputSold(book.sold);
+        setInputOverview(book.overview);
+        setInputFileName(book.imgBook);
+        setInputTotalBook(book.totalBook);
+        setInputPrice(book.price);
+        setSelectGenre(book.genres);
+        setImageSrc("");
+    };
+
+    const handleCloseEditBook = () => {
+        setCheckEdit(false);
+        setIdBook(0);
+        setInputTitle("");
+        setInputAuhtor("");
+        setInputRelease("");
+        setInputLength(0);
+        setInputSold(0);
+        setInputOverview("");
+        setInputFileName("");
+        setInputTotalBook(0);
+        setInputPrice(0);
+        setSelectGenre([]);
+        setImageSrc("");
+        setInputDate("");
+        setCheckConfirmEdit(false);
+        setConfirmEdit(false);
+    };
+
+    const handleConfirmEdit = () => {
+        setCheckConfirmEdit(true);
+    };
+
+    const handleConfirmSave = () => {
+        setConfirmEdit(true);
+    };
+
+    const confirmYesEditBook = () => {
+        files &&
+            axios
+                .post("http://localhost:8082/api/file/upload", files, {
                     headers: {
                         Authorization:
                             "Bearer " + localStorage.getItem("accessToken"),
                     },
-                }
-            )
-            .then((res) => {
-                alert("Thêm thể loại thành công");
-                return res.data;
-            })
-            .catch((error) => alert("Thêm thể loại thất bại"));
-    };
+                })
+                .then((res) => {
+                    return res.data;
+                })
+                .catch((error) => console.log("error" + error));
 
-    // Edit book
-    const handleEditBook = (book) => {
-        setCheckEdit(true);
-        setInputAuhtor(book.author);
-        setInputFileName(book.imgBook);
-        setIdBook(book.id);
-        setInputLength(book.length);
-        setInputPrice(book.price);
-        setInputRelease(book.releaseDate);
-        setInputTitle(book.title);
-        setInputSold(book.sold);
-        setInputTotalBook(book.totalBook);
-    };
-
-    const handleCheckEdit = () => {
-        setCheckConfirmEdit(false);
-        setCheckEdit(false);
-    };
-
-    const confirmYesEdit = () => {
         axios
             .put(
                 `http://localhost:8082/api/book/${idBook}`,
@@ -239,9 +304,12 @@ function ManagerBook() {
                     author: inputAuthor,
                     releaseDate: inputRelease,
                     length: inputLength,
-                    totalBook: inputTotalBook,
                     sold: inputSold,
+                    overview: inputOverview,
+                    imgBook: inputFileName,
+                    totalBook: inputTotalBook,
                     price: inputPrice,
+                    genres: selectGenre,
                 },
                 {
                     headers: {
@@ -251,103 +319,26 @@ function ManagerBook() {
                 }
             )
             .then((res) => {
-                alert("Sửa sách thành công");
+                alert("Sửa phim thành công");
                 getAllBook();
-                setCheckConfirmEdit(false);
+                setCheckEdit(false);
                 setConfirmEdit(false);
+                setCheckConfirmEdit(false);
                 return res.data;
             })
-            .catch((error) => alert("Sửa sách thấy bại"));
+            .catch((error) => {
+                const resMess =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.toString() ||
+                    error.message();
+                alert(resMess);
+            });
     };
 
-    const confirmNoEdit = () => {
+    const confirmNoEditBook = () => {
         setConfirmEdit(false);
-    };
-
-    const handleTitleChange = (e) => {
-        if (checkConfirmEdit) {
-            setInputTitle(e.target.value);
-        }
-    };
-
-    const handleAuthorChange = (e) => {
-        if (checkConfirmEdit) {
-            setInputAuhtor(e.target.value);
-        }
-    };
-
-    const handleDateChange = (e) => {
-        if (checkConfirmEdit) {
-            setInputRelease(e.target.value);
-        }
-    };
-
-    const handleLengthChange = (e) => {
-        if (checkConfirmEdit) {
-            setInputLength(e.target.value);
-        }
-    };
-
-    const handleSoldChange = (e) => {
-        if (checkConfirmEdit) {
-            setInputSold(e.target.value);
-        }
-    };
-
-    const handleTotalChange = (e) => {
-        if (checkConfirmEdit) {
-            setInputTotalBook(e.target.value);
-        }
-    };
-
-    const handlePriceChange = (e) => {
-        if (checkConfirmEdit) {
-            setInputPrice(e.target.value);
-        }
-    };
-
-    //  Sửa ảnh của sách
-    const handleEditImg = (book) => {
-        setDetailBook(book);
-        setCheckEditImg(true);
-    };
-
-    const handleCofirmEditImg = () => {
-        axios
-            .post("http://localhost:8082/api/file/upload", files)
-            .then((res) => {
-                return res.data;
-            })
-            .catch((error) => alert("Thêm ảnh vào kho dữ liệu thất bại"));
-
-        axios
-            .post(
-                `http://localhost:8082/api/book/${detailBook.id}/bookImg?img=` +
-                    files.get("files").name,
-                {},
-                {
-                    headers: {
-                        Authorization:
-                            "Bearer " + localStorage.getItem("accessToken"),
-                    },
-                }
-            )
-            .then((res) => {
-                alert("Thay ảnh bìa thành công");
-                setCheckEditImg(false);
-                setInputFileName("");
-                setFiles(null);
-                setImageSrc("");
-                getAllBook();
-                return res.data;
-            })
-            .catch((error) => alert("Thay ảnh bài thất bại"));
-    };
-
-    const handleCloseEditImg = () => {
-        setCheckEditImg(false);
-        setFiles(null);
-        setImageSrc("");
     };
 
     return (
@@ -365,64 +356,93 @@ function ManagerBook() {
                             />
                             <button onClick={handleSearch}>Tìm kiếm</button>
                         </div>
-                        <div className="add__book" onClick={handleCheckAddBook}>
-                            <button>Thêm Sách</button>
-                        </div>
-                    </div>
-                    <div className="list__cards">
-                        {listBook.map((book, index) => (
-                            <div className="cards" key={index}>
-                                <AiFillCloseCircle
-                                    className="delete__book"
-                                    onClick={() => handleDeleteBook(book)}
-                                    style={{ cursor: "pointer" }}
-                                />
-                                <div className="overlay__select">
-                                    <div
-                                        className="select__edit"
-                                        onClick={() => handleEditBook(book)}
-                                    >
-                                        Edit
-                                    </div>
-                                    <div
-                                        className="select__genre"
-                                        onClick={() =>
-                                            handleAlertGenre(book.id)
-                                        }
-                                    >
-                                        Genre
-                                    </div>
-                                    <div
-                                        className="select__image"
-                                        onClick={() => handleEditImg(book)}
-                                    >
-                                        Image
-                                    </div>
-                                </div>
-                                <img
-                                    alt=""
-                                    className="cards__img"
-                                    src={
-                                        `http://localhost:8082/api/file/getImg?path=` +
-                                        book.imgBook
-                                    }
-                                />
-
-                                <div className="infoBook">
-                                    <p className="nameBook">{book.title}</p>
-                                    <p className="soldBook">
-                                        Đã bán: {book.sold}
-                                    </p>
-                                    <p className="totalBook">
-                                        Còn lại: {book.totalBook}
-                                    </p>
-                                    <p className="priceBook">
-                                        Giá bán:
-                                        <span> {book.price}đ</span>
-                                    </p>
-                                </div>
+                        {localStorage.getItem("role") === "ROLE_ADMIN" ? (
+                            <div
+                                className="add__book"
+                                onClick={handleCheckAddBook}
+                            >
+                                <button>Thêm Sách</button>
                             </div>
-                        ))}
+                        ) : (
+                            ""
+                        )}
+                    </div>
+                    <div className="list__table__book">
+                        <table className="book-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên sách</th>
+                                    <th>Tác giả</th>
+                                    <th>Thể loại</th>
+                                    <th>Ngày phát hành</th>
+                                    <th>Số trang</th>
+                                    <th>Đã bán</th>
+                                    <th>Xem chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {listBook.map((book) => (
+                                    <tr key={book.id}>
+                                        <td>{book.id}</td>
+                                        <td>{book.title}</td>
+                                        <td>{book.author}</td>
+                                        <td>
+                                            {book.genres
+                                                ? book.genres.map((genre) => (
+                                                      <span className="genre__name">
+                                                          {genre.name}
+                                                      </span>
+                                                  ))
+                                                : ""}
+                                        </td>
+                                        <td>{book.releaseDate}</td>
+                                        <td>{book.length}</td>
+                                        <td>{book.sold}</td>
+                                        <td>
+                                            <Link
+                                                to={`/Book/${book.id}`}
+                                                style={{
+                                                    textDecoration: "none",
+                                                }}
+                                            >
+                                                <button className="btn__view">
+                                                    View
+                                                </button>
+                                            </Link>
+                                            {localStorage.getItem("role") ===
+                                            "ROLE_ADMIN" ? (
+                                                <button
+                                                    className="btn__edit"
+                                                    onClick={() =>
+                                                        handleCheckEditBook(
+                                                            book
+                                                        )
+                                                    }
+                                                >
+                                                    Edit
+                                                </button>
+                                            ) : (
+                                                ""
+                                            )}
+                                            {localStorage.getItem("role") ===
+                                            "ROLE_ADMIN" ? (
+                                                <button
+                                                    className="btn__del"
+                                                    onClick={() =>
+                                                        handleCheckDelBook(book)
+                                                    }
+                                                >
+                                                    Delete
+                                                </button>
+                                            ) : (
+                                                ""
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -430,71 +450,101 @@ function ManagerBook() {
                 <div className="container__add_book">
                     <AiFillCloseCircle
                         className="close__add_book"
-                        onClick={() => setCheckAdd(false)}
+                        onClick={handleCloseAddBook}
                         style={{ cursor: "pointer" }}
                     />
                     <h1 className="addBook">Thêm Sách</h1>
                     <div className="container__info_book">
                         <div className="info__book">
-                            <div className="value__input">
-                                <label>Tiêu đề: </label>
-                                <input
-                                    placeholder="Tên quyển sách"
-                                    value={inputTitle}
+                            <div className="title__author">
+                                <div className="title__input">
+                                    <label>Tiêu đề: </label>
+                                    <input
+                                        placeholder="Tên quyển sách"
+                                        value={inputTitle}
+                                        onChange={(e) =>
+                                            setInputTitle(e.target.value)
+                                        }
+                                    />
+                                </div>
+                                <div className="author__input">
+                                    <label>Tác giả: </label>
+                                    <input
+                                        placeholder="Tên tác giả"
+                                        value={inputAuthor}
+                                        onChange={(e) =>
+                                            setInputAuhtor(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="overview__book">
+                                <label>Mô tả sách: </label>
+                                <textarea
+                                    placeholder="Giới thiệu sách"
+                                    value={inputOverview}
                                     onChange={(e) =>
-                                        setInputTitle(e.target.value)
+                                        setInputOverview(e.target.value)
                                     }
                                 />
                             </div>
-                            <div className="value__input">
-                                <label>Tác giả: </label>
-                                <input
-                                    placeholder="Tên tác giả"
-                                    value={inputAuthor}
-                                    onChange={(e) =>
-                                        setInputAuhtor(e.target.value)
-                                    }
+                            <div className="date__length">
+                                <div className="title__input">
+                                    <label>Ngày phát hành: </label>
+                                    <input
+                                        type="date"
+                                        placeholder="DD/MM/YYYY"
+                                        value={inputDate}
+                                        onChange={(e) => handleChangeDate(e)}
+                                    />
+                                </div>
+                                <div className="author__input">
+                                    <label>Số trang: </label>
+                                    <input
+                                        placeholder="Số trang sách"
+                                        value={inputLength}
+                                        onChange={(e) =>
+                                            setInputLength(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="genres__book">
+                                <label>Thể loại: </label>
+                                <Select
+                                    placeholder="Chọn thể loại"
+                                    options={listGenres.map((genre) => ({
+                                        value: genre,
+                                        label: genre.name,
+                                    }))}
+                                    onChange={handleChangeGenre}
+                                    className="select__add__genre"
+                                    isClearable={true}
+                                    isSearchable={true}
+                                    isMulti={true}
                                 />
                             </div>
-                            <div className="value__input">
-                                <label>Ngày phát hành: </label>
-                                <input
-                                    placeholder="DD/MM/YYYY"
-                                    value={inputRelease}
-                                    onChange={(e) =>
-                                        setInputRelease(e.target.value)
-                                    }
-                                />
-                            </div>
-                            <div className="value__input">
-                                <label>Số trang: </label>
-                                <input
-                                    placeholder="Số trang sách"
-                                    value={inputLength}
-                                    onChange={(e) =>
-                                        setInputLength(e.target.value)
-                                    }
-                                />
-                            </div>
-                            <div className="value__input">
-                                <label>Tổng số sách: </label>
-                                <input
-                                    placeholder="Tổng số sách"
-                                    value={inputTotalBook}
-                                    onChange={(e) =>
-                                        setInputTotalBook(e.target.value)
-                                    }
-                                />
-                            </div>
-                            <div className="value__input">
-                                <label>Giá tiền: </label>
-                                <input
-                                    placeholder="Giá tiền 1 quyển"
-                                    value={inputPrice}
-                                    onChange={(e) =>
-                                        setInputPrice(e.target.value)
-                                    }
-                                />
+                            <div className="price__total">
+                                <div className="title__input">
+                                    <label>Giá tiền: </label>
+                                    <input
+                                        placeholder="Giá tiền"
+                                        value={inputPrice}
+                                        onChange={(e) =>
+                                            setInputPrice(e.target.value)
+                                        }
+                                    />
+                                </div>
+                                <div className="author__input">
+                                    <label>Tổng số sách: </label>
+                                    <input
+                                        placeholder="Tổng số sách"
+                                        value={inputTotalBook}
+                                        onChange={(e) =>
+                                            setInputTotalBook(e.target.value)
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="img__book">
@@ -506,7 +556,7 @@ function ManagerBook() {
                                     onChange={handleUpLoad}
                                     hidden
                                 ></input>
-                                <button className="uploadButton">
+                                <button className="upload__btn">
                                     <label for="actual-btn">Upload</label>
                                 </button>
                                 {imageSrc ? (
@@ -524,13 +574,20 @@ function ManagerBook() {
                     </div>
                     {confirmAdd ? (
                         <div className="confirm__manager">
-                            <h1>
-                                Bạn có chắc chắn muốn thêm 1 quyển sách mới hay
-                                không
-                            </h1>
-                            <div className="confirm__btn">
-                                <button onClick={confirmYes}>Xác nhận</button>
-                                <button onClick={confirmNo}>Hủy</button>
+                            <div className="overlay__confirm"></div>
+                            <div className="frame__confirm">
+                                <h1>
+                                    Bạn có chắc chắn muốn thêm 1 quyển sách mới
+                                    hay không
+                                </h1>
+                                <div className="confirm__btn">
+                                    <button onClick={confirmYesAddBook}>
+                                        Xác nhận
+                                    </button>
+                                    <button onClick={confirmNoAddBook}>
+                                        Hủy
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ) : (
@@ -541,264 +598,232 @@ function ManagerBook() {
                 ""
             )}
             {checkDelete ? (
-                <div className="containerDelete">
-                    <div className="overlay__delete"></div>
-                    <div className="container__delete">
-                        <AiFillCloseCircle
-                            className="close__add_book"
-                            onClick={() => setCheckDelete(false)}
-                            style={{ cursor: "pointer" }}
-                        />
-                        <h1>Xác nhận lại thông tin</h1>
-                        <div className="container__info_book">
-                            <div className="info__book">
-                                <div className="value__input">
-                                    <label>Tiêu đề: </label>
-                                    <input defaultValue={detailBook.title} />
-                                </div>
-                                <div className="value__input">
-                                    <label>Tác giả: </label>
-                                    <input defaultValue={detailBook.author} />
-                                </div>
-                                <div className="value__input">
-                                    <label>Ngày phát hành: </label>
-                                    <input
-                                        defaultValue={detailBook.releaseDate}
-                                    />
-                                </div>
-                                <div className="value__input">
-                                    <label>Số trang: </label>
-                                    <input defaultValue={detailBook.length} />
-                                </div>
-                                <div className="value__input">
-                                    <label>Tổng số sách: </label>
-                                    <input
-                                        defaultValue={detailBook.totalBook}
-                                    />
-                                </div>
-                                <div className="value__input">
-                                    <label>Giá tiền: </label>
-                                    <input defaultValue={detailBook.price} />
-                                </div>
-                            </div>
-                            <div className="img__book">
-                                <div className="containerImgBottom">
-                                    <img
-                                        src={
-                                            "http://localhost:8082/api/file/getImg?path=" +
-                                            detailBook.imgBook
-                                        }
-                                        className="set__up__size__img"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                <div className="container__del__book">
+                    <div className="overlay__del__book"></div>
+                    <div className="frame__confirm">
+                        <h1>Bạn có chắc chắn muốn xóa quyển sách này không?</h1>
                         <div className="confirm__btn">
-                            <button onClick={confirmYesDelete}>Xác nhận</button>
+                            <button onClick={confirmYesDelBook}>
+                                Xác nhận
+                            </button>
+                            <button onClick={confirmNoDelBook}>Hủy</button>
                         </div>
-                    </div>
-                </div>
-            ) : (
-                ""
-            )}
-            {checkAddGenre ? (
-                <div className="containerAddGenre">
-                    <div className="overlay__add_genre"></div>
-                    <div className="container__add__genre">
-                        <AiFillCloseCircle
-                            className="close__add_genre"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => setCheckAddGenre(false)}
-                        />
-                        <h1>Thêm thể lại</h1>
-                        <div className="input__add_genre">
-                            <label>Name: </label>
-                            <input
-                                placeholder="Nhập thể loại"
-                                value={inputGenre}
-                                onChange={(e) => setInputGenre(e.target.value)}
-                            />
-                        </div>
-                        <button onClick={handleConfirmAddGenre}>
-                            Xác nhận
-                        </button>
                     </div>
                 </div>
             ) : (
                 ""
             )}
             {checkEdit ? (
-                <div className="container__edit_book">
+                <div className="container__add_book">
                     <AiFillCloseCircle
-                        className="close__edit_book"
-                        onClick={handleCheckEdit}
+                        className="close__add_book"
+                        onClick={handleCloseEditBook}
                         style={{ cursor: "pointer" }}
                     />
-                    <h1 className="editBook">Sửa Sách</h1>
+                    <h1 className="addBook">Sửa Sách</h1>
                     <div className="container__info_book">
-                        <div className="info__edit__book">
-                            <div className="value__input">
-                                <label>Tiêu đề: </label>
+                        <div className="info__book">
+                            <div className="id__book">
+                                <label>ID: </label>
                                 <input
-                                    placeholder="Tên quyển sách"
-                                    value={inputTitle}
-                                    onChange={(e) => handleTitleChange(e)}
-                                    disabled={!checkConfirmEdit}
+                                    defaultValue={idBook}
+                                    className="muted"
+                                />
+                            </div>
+                            <div className="title__author">
+                                <div className="title__input">
+                                    <label>Tiêu đề: </label>
+                                    <input
+                                        placeholder="Tên quyển sách"
+                                        value={inputTitle}
+                                        onChange={(e) =>
+                                            setInputTitle(e.target.value)
+                                        }
+                                        className={
+                                            checkConfirmEdit ? "" : "muted"
+                                        }
+                                    />
+                                </div>
+                                <div className="author__input">
+                                    <label>Tác giả: </label>
+                                    <input
+                                        placeholder="Tên tác giả"
+                                        value={inputAuthor}
+                                        onChange={(e) =>
+                                            setInputAuhtor(e.target.value)
+                                        }
+                                        className={
+                                            checkConfirmEdit ? "" : "muted"
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="overview__book">
+                                <label>Mô tả sách: </label>
+                                <textarea
+                                    placeholder="Giới thiệu sách"
+                                    value={inputOverview}
+                                    onChange={(e) =>
+                                        setInputOverview(e.target.value)
+                                    }
                                     className={checkConfirmEdit ? "" : "muted"}
                                 />
                             </div>
-                            <div className="value__input">
-                                <label>Tác giả: </label>
-                                <input
-                                    placeholder="Tên tác giả"
-                                    value={inputAuthor}
-                                    onChange={(e) => handleAuthorChange(e)}
-                                    disabled={!checkConfirmEdit}
-                                    className={checkConfirmEdit ? "" : "muted"}
+                            <div className="date__length">
+                                <div className="title__input">
+                                    <label>Ngày phát hành: </label>
+                                    <input
+                                        type="text"
+                                        placeholder="DD/MM/YYYY"
+                                        value={inputRelease}
+                                        onChange={(e) =>
+                                            setInputRelease(e.target.value)
+                                        }
+                                        className={
+                                            checkConfirmEdit ? "" : "muted"
+                                        }
+                                    />
+                                </div>
+                                <div className="author__input">
+                                    <label>Số trang: </label>
+                                    <input
+                                        placeholder="Số trang sách"
+                                        value={inputLength}
+                                        onChange={(e) =>
+                                            setInputLength(e.target.value)
+                                        }
+                                        className={
+                                            checkConfirmEdit ? "" : "muted"
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="genres__book">
+                                <label>Thể loại: </label>
+                                <Select
+                                    placeholder="Chọn thể loại"
+                                    options={listGenres.map((genre) => ({
+                                        value: genre,
+                                        label: genre.name,
+                                    }))}
+                                    onChange={handleChangeGenre}
+                                    className={
+                                        checkConfirmEdit
+                                            ? "select__add__genre"
+                                            : "muted"
+                                    }
+                                    isClearable={true}
+                                    isSearchable={true}
+                                    isMulti={true}
                                 />
                             </div>
-                            <div className="value__input">
-                                <label>Ngày phát hành: </label>
-                                <input
-                                    placeholder="DD/MM/YYYY"
-                                    value={inputRelease}
-                                    disabled={!checkConfirmEdit}
-                                    onChange={(e) => handleDateChange(e)}
-                                    className={checkConfirmEdit ? "" : "muted"}
-                                />
+                            <div className="price__total">
+                                <div className="title__input">
+                                    <label>Giá tiền: </label>
+                                    <input
+                                        placeholder="Giá tiền"
+                                        value={inputPrice}
+                                        onChange={(e) =>
+                                            setInputPrice(e.target.value)
+                                        }
+                                        className={
+                                            checkConfirmEdit ? "" : "muted"
+                                        }
+                                    />
+                                </div>
+                                <div className="author__input">
+                                    <label>Sách đã bán: </label>
+                                    <input
+                                        placeholder="Sách đã bán"
+                                        value={inputSold}
+                                        onChange={(e) =>
+                                            setInputSold(e.target.value)
+                                        }
+                                        className={
+                                            checkConfirmEdit ? "" : "muted"
+                                        }
+                                    />
+                                </div>
                             </div>
-                            <div className="value__input">
-                                <label>Số trang: </label>
-                                <input
-                                    placeholder="Số trang sách"
-                                    value={inputLength}
-                                    disabled={!checkConfirmEdit}
-                                    onChange={(e) => handleLengthChange(e)}
-                                    className={checkConfirmEdit ? "" : "muted"}
-                                />
-                            </div>
-                            <div className="value__input">
-                                <label>Sold: </label>
-                                <input
-                                    placeholder="Số trang sách"
-                                    value={inputSold}
-                                    disabled={!checkConfirmEdit}
-                                    onChange={(e) => handleSoldChange(e)}
-                                    className={checkConfirmEdit ? "" : "muted"}
-                                />
-                            </div>
-                            <div className="value__input">
+                            <div className="totalbook__input">
                                 <label>Tổng số sách: </label>
                                 <input
                                     placeholder="Tổng số sách"
                                     value={inputTotalBook}
-                                    disabled={!checkConfirmEdit}
-                                    onChange={(e) => handleTotalChange(e)}
+                                    onChange={(e) =>
+                                        setInputTotalBook(e.target.value)
+                                    }
                                     className={checkConfirmEdit ? "" : "muted"}
                                 />
                             </div>
-                            <div className="value__input">
-                                <label>Giá tiền: </label>
+                        </div>
+                        <div className="img__book">
+                            <div className="containerImgBottom">
                                 <input
-                                    placeholder="Giá tiền 1 quyển"
-                                    value={inputPrice}
-                                    disabled={!checkConfirmEdit}
-                                    onChange={(e) => handlePriceChange(e)}
-                                    className={checkConfirmEdit ? "" : "muted"}
-                                />
+                                    type="file"
+                                    className={
+                                        checkConfirmEdit ? "selectImg" : "muted"
+                                    }
+                                    id="actual-btn"
+                                    onChange={handleUpLoad}
+                                    hidden
+                                ></input>
+                                <button
+                                    className={
+                                        checkConfirmEdit
+                                            ? "upload__btn"
+                                            : "upload__btn muted"
+                                    }
+                                >
+                                    <label for="actual-btn">Upload</label>
+                                </button>
+                                {imageSrc ? (
+                                    <img
+                                        src={imageSrc}
+                                        className="setUpSizeImg"
+                                        alt=""
+                                    />
+                                ) : (
+                                    <img
+                                        src={
+                                            "http://localhost:8082/api/file/getImg?path=" +
+                                            inputFileName
+                                        }
+                                        className="setUpSizeImg"
+                                        alt=""
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
                     <div className="select__manager">
                         {checkConfirmEdit ? (
-                            <button onClick={() => setConfirmEdit(true)}>
-                                Save
-                            </button>
+                            <button onClick={handleConfirmSave}>Save</button>
                         ) : (
-                            <button onClick={() => setCheckConfirmEdit(true)}>
-                                Edit
-                            </button>
+                            <button onClick={handleConfirmEdit}>Edit</button>
                         )}
                     </div>
                     {confirmEdit ? (
                         <div className="confirm__manager">
-                            <h1>
-                                Bạn có chắc chắn muốn sửa các thông tin này
-                                không?
-                            </h1>
-                            <div className="confirm__btn">
-                                <button onClick={confirmYesEdit}>
-                                    Xác nhận
-                                </button>
-                                <button onClick={confirmNoEdit}>Hủy</button>
+                            <div className="overlay__confirm"></div>
+                            <div className="frame__confirm">
+                                <h1>
+                                    Bạn có chắc chắn muốn sửa quyển sách này
+                                    không?
+                                </h1>
+                                <div className="confirm__btn">
+                                    <button onClick={confirmYesEditBook}>
+                                        Xác nhận
+                                    </button>
+                                    <button onClick={confirmNoEditBook}>
+                                        Hủy
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ) : (
                         ""
                     )}
-                </div>
-            ) : (
-                ""
-            )}
-            {checkEditImg ? (
-                <div className="containerEditImg">
-                    <div className="overlay__edit__img"></div>
-                    <div className="container__edit__img">
-                        <AiFillCloseCircle
-                            className="delete__book"
-                            onClick={handleCloseEditImg}
-                            style={{ cursor: "pointer" }}
-                        />
-                        <h1>Thay ảnh bìa</h1>
-                        <div className="edit__img">
-                            <div className="edit__img__book">
-                                <div className="container__img__old">
-                                    <button className="btn__img__old">
-                                        <label for="actual-btn">
-                                            Ảnh ban đầu
-                                        </label>
-                                    </button>
-                                    <img
-                                        src={
-                                            "http://localhost:8082/api/file/getImg?path=" +
-                                            detailBook.imgBook
-                                        }
-                                        className="set__up__size__img__edit"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                            <RxArrowRight className="icon__arrow__right" />
-                            <div className="edit__img__book">
-                                <div className="container__img__new">
-                                    <input
-                                        type="file"
-                                        className="selectImg"
-                                        id="actual-btn"
-                                        onChange={handleUpLoad}
-                                        hidden
-                                    ></input>
-                                    <button className="btn__img__new">
-                                        <label for="actual-btn">Upload</label>
-                                    </button>
-                                    {imageSrc ? (
-                                        <img
-                                            src={imageSrc}
-                                            className="set__up__size__img__edit"
-                                            alt=""
-                                        />
-                                    ) : null}
-                                </div>
-                            </div>
-                        </div>
-                        <button
-                            className="btn__cofirm__edit"
-                            onClick={handleCofirmEditImg}
-                        >
-                            Xác nhận
-                        </button>
-                    </div>
                 </div>
             ) : (
                 ""

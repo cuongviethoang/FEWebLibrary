@@ -23,22 +23,31 @@ function Signup() {
 
         if (value === "") {
             if (name === "username") {
+                setSuccessFul(false);
                 setErrUsername("Vui lòng nhập tên người dùng");
             } else if (name === "email") {
+                setSuccessFul(false);
+
                 setErrorEmail("Vui lòng nhập địa chỉ email");
             } else if (name === "password") {
+                setSuccessFul(false);
+
                 setErrPass("Vui lòng nhập mật khẩu");
             }
         } else {
             if (name === "email") {
                 const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
                 if (!regex.test(value)) {
+                    setSuccessFul(false);
+
                     setErrorEmail("Địa chỉ email không hợp lệ");
                 } else {
                     setErrorEmail("");
                 }
             } else if (name === "password") {
                 if (value.length < 6) {
+                    setSuccessFul(false);
+
                     setErrPass("Vui lòng nhập mật khẩu từ 6 kí tự trở lên");
                 } else {
                     setErrPass("");
@@ -76,16 +85,19 @@ function Signup() {
                 setErrorMess("");
             }, 3000);
         } else if (username.trim() === "") {
+            setSuccessFul(false);
             setErrorMess("Vui lòng điền tên đăng kí");
             setTimeout(() => {
                 setErrorMess("");
             }, 3000);
         } else if (email.trim() === "") {
+            setSuccessFul(false);
             setErrorMess("Vui lòng điền email");
             setTimeout(() => {
                 setErrorMess("");
             }, 3000);
         } else if (password.trim() === "") {
+            setSuccessFul(false);
             setErrorMess("Vui lòng điền mật khẩu");
             setTimeout(() => {
                 setErrorMess("");

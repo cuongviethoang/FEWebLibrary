@@ -35,23 +35,20 @@ function Header() {
                         <h1 className="titleWebBook">WebBook.vn</h1>
                     </Link>
                 </div>
+
                 <div className="headingUser">
-                    {localStorage.getItem("role") === "ROLE_ADMIN" ? (
-                        <div className="managerBook">
-                            <MdManageAccounts className="iconManager" />
-                            <Link
-                                to="/ManagerBook"
-                                style={{
-                                    textDecoration: "none",
-                                    color: "#000",
-                                }}
-                            >
-                                <p className="manager__book">Quản lí sách</p>
-                            </Link>
-                        </div>
-                    ) : (
-                        ""
-                    )}
+                    <div className="managerBook">
+                        <MdManageAccounts className="iconManager" />
+                        <Link
+                            to="/ManagerBook"
+                            style={{
+                                textDecoration: "none",
+                                color: "#000",
+                            }}
+                        >
+                            <p className="manager__book">Quản lí sách</p>
+                        </Link>
+                    </div>
                     {localStorage.getItem("role") === "ROLE_ADMIN" ? (
                         <div className="managerBook">
                             <IoStatsChart className="iconManager" />
@@ -72,7 +69,10 @@ function Header() {
                         <AiOutlineShoppingCart className="iconShopping" />
                         <Link
                             to="/Cart"
-                            style={{ textDecoration: "none", color: "#000" }}
+                            style={{
+                                textDecoration: "none",
+                                color: "#000",
+                            }}
                         >
                             <p className="numCart">Giỏ hàng</p>
                         </Link>

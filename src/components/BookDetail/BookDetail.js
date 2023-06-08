@@ -34,6 +34,10 @@ function BookDetail() {
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
 
+    const [checkProfilePic, setProfilePic] = useState(
+        localStorage.getItem("profilePic")
+    );
+
     useEffect(() => {
         getBookDetail();
         getComment();
@@ -367,8 +371,9 @@ function BookDetail() {
                                 <img
                                     alt=""
                                     src={
+                                        bookDetail.imgBook &&
                                         `http://localhost:8082/api/file/getImg?path=` +
-                                        bookDetail.imgBook
+                                            bookDetail.imgBook
                                     }
                                     className="imgBook"
                                 />
@@ -499,15 +504,22 @@ function BookDetail() {
                         </div>
                     </div>
                 </div>
+                <div className="container container__overview">
+                    <h1>Giới thiệu</h1>
+                    <div className="containerOverview">
+                        <p>{bookDetail.overview}</p>
+                    </div>
+                </div>
                 <div className="containerReact">
                     <h1 className="title__rated">Đánh giá</h1>
                     <div className="containerTop">
                         <img
                             className="containerImg"
                             src={
-                                localStorage.getItem("profilePic") != null
-                                    ? "http://localhost:8082/api/file/getImg?path=" +
-                                      localStorage.getItem("profilePic")
+                                checkProfilePic != null
+                                    ? checkProfilePic &&
+                                      "http://localhost:8082/api/file/getImg?path=" +
+                                          localStorage.getItem("profilePic")
                                     : "https://tse3.mm.bing.net/th?id=OIP.CiC4AzdlWzYcj2j65RM33AAAAA&pid=Api&P=0"
                             }
                             alt=""
@@ -538,9 +550,10 @@ function BookDetail() {
                                 <img
                                     className="containerImg"
                                     src={
-                                        react.imgUser !== ""
-                                            ? "http://localhost:8082/api/file/getImg?path=" +
-                                              react.imgUser
+                                        react.imgUser != null
+                                            ? react.imgUser &&
+                                              "http://localhost:8082/api/file/getImg?path=" +
+                                                  react.imgUser
                                             : "https://tse3.mm.bing.net/th?id=OIP.CiC4AzdlWzYcj2j65RM33AAAAA&pid=Api&P=0"
                                     }
                                     alt=""
@@ -581,9 +594,10 @@ function BookDetail() {
                         <img
                             className="containerImg"
                             src={
-                                localStorage.getItem("profilePic") != null
-                                    ? "http://localhost:8082/api/file/getImg?path=" +
-                                      localStorage.getItem("profilePic")
+                                checkProfilePic != null
+                                    ? checkProfilePic &&
+                                      "http://localhost:8082/api/file/getImg?path=" +
+                                          localStorage.getItem("profilePic")
                                     : "https://tse3.mm.bing.net/th?id=OIP.CiC4AzdlWzYcj2j65RM33AAAAA&pid=Api&P=0"
                             }
                             alt=""
@@ -622,9 +636,10 @@ function BookDetail() {
                                 <img
                                     className="containerImg"
                                     src={
-                                        comment.imgUser !== ""
-                                            ? "http://localhost:8082/api/file/getImg?path=" +
-                                              comment.imgUser
+                                        comment.imgUser != null
+                                            ? comment.imgUser &&
+                                              "http://localhost:8082/api/file/getImg?path=" +
+                                                  comment.imgUser
                                             : "https://tse3.mm.bing.net/th?id=OIP.CiC4AzdlWzYcj2j65RM33AAAAA&pid=Api&P=0"
                                     }
                                     alt=""
@@ -659,7 +674,7 @@ function BookDetail() {
                 </div>
             </div>
             {checkBuy ? (
-                <div className="alert__message">
+                <div className="alert__buy__message">
                     <div className="overlay__detail"></div>
                     <div className="container__confirm">
                         <h1 className="confirm__number">
@@ -701,7 +716,7 @@ function BookDetail() {
                 ""
             )}
             {checkAdd ? (
-                <div className="alert__message">
+                <div className="alert__add__message">
                     <div className="overlay__detail"></div>
                     <div className="container__confirm">
                         <h1 className="confirm__number">

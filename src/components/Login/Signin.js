@@ -25,7 +25,7 @@ function Signin() {
                 localStorage.setItem("username", result.username);
                 localStorage.setItem("profilePic", result.imgProfile);
                 localStorage.setItem("role", result.roles[0]);
-                navigate("/Home");
+                navigate("/ManagerBook");
                 return result;
             })
             .catch((error) => {

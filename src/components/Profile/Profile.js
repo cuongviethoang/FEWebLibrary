@@ -15,6 +15,9 @@ function Profile() {
     const [currentBill, setCurrentBill] = useState([]);
     const [billDetail, setBillDetail] = useState({});
     const [checkDeleteBill, setCheckDeleteBill] = useState(false);
+    const [checkProfilePic, setProfilePic] = useState(
+        localStorage.getItem("profilePic")
+    );
 
     const navigate = useNavigate();
 
@@ -83,6 +86,7 @@ function Profile() {
             .then((res) => {
                 localStorage.setItem("profilePic", files.get("files").name);
                 setCheckCamera(false);
+                setProfilePic(files.get("files").name);
                 return res.data;
             })
             .catch((error) => console.log("error" + error));
@@ -201,9 +205,7 @@ function Profile() {
                                     <img
                                         className="userImg"
                                         src={
-                                            localStorage.getItem(
-                                                "profilePic"
-                                            ) === null
+                                            checkProfilePic == "null"
                                                 ? "https://tse3.mm.bing.net/th?id=OIP.CiC4AzdlWzYcj2j65RM33AAAAA&pid=Api&P=0"
                                                 : "http://localhost:8082/api/file/getImg?path=" +
                                                   localStorage.getItem(

@@ -388,6 +388,29 @@
     font-size: 20px;
 }
 
+/* Mô tả */
+.container__overview {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 10px 10px 20px #ccc;
+}
+
+.container__overview h1 {
+    text-align: center;
+    color: #de0217;
+}
+
+.containerOverview {
+    width: 1000px;
+    margin: auto;
+}
+
+.containerOverview p {
+    font-size: 20px;
+    text-align: justify;
+    line-height: 30px;
+}
+
 /* React */
 
 .icon__star {
@@ -576,7 +599,8 @@
 
 /* Alert mua sách */
 
-.alert__message {
+.alert__buy__message,
+.alert__add__message {
     position: fixed;
     top: 0;
     right: 0;

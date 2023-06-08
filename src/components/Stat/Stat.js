@@ -58,7 +58,7 @@ function Stat() {
                                         <td>{book.price}</td>
                                         <td>{book.totalPrice}</td>
                                         <td>
-                                            <button>
+                                            <button className="btn__view">
                                                 <Link
                                                     to={`/BillDetail/Book/${book.id}`}
                                                     style={{
